@@ -14,18 +14,13 @@ except ImportError:
 app = Flask(__name__)
 CORS(app)
 
-# --- MODEL LOADING LOGIC ---
 MODEL_FILE = 'heart_disease_model.pkl'
 
 
 def load_or_train_model():
-    """Checks for model file. If missing, runs training script first."""
-
-    # Case 1: Model is missing
     if not os.path.exists(MODEL_FILE):
         print(f"\nWarning: '{MODEL_FILE}' not found.")
 
-        # Check if we even HAVE the training script
         if train_model is None:
             print("Error: Model is missing AND 'train_model.py' is missing.")
             print("Please ensure files are in the same folder.")
@@ -34,7 +29,6 @@ def load_or_train_model():
         print("Initiating training sequence...")
 
         try:
-            # Check for the correct function name (handles different versions of your script)
             if hasattr(train_model, 'train_and_verify_model'):
                 train_model.train_and_verify_model()
             else:
@@ -45,7 +39,6 @@ def load_or_train_model():
             print(f"Training failed: {e}")
             sys.exit(1)
 
-    # Case 2: Load the model (It should exist now, either it was there or we just built it)
     if os.path.exists(MODEL_FILE):
         print(f"Loading model: {MODEL_FILE}")
         return joblib.load(MODEL_FILE)
@@ -55,6 +48,7 @@ def load_or_train_model():
 
 
 model = load_or_train_model()
+
 
 @app.route('/')
 def home():
