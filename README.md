@@ -1,6 +1,6 @@
 # Heart Disease Prediction (ML)
 
-This is a machine learning application built to predict the risk of cardiovascular disease (CVD) using patient physiological data. It was developed as a final project to reproduce and extend the findings of the 2022 IEEE paper *"Machine Learning Based Heart Disease Prediction: A Study for Home Personalized Care."*
+This is a machine learning application built to predict the risk of cardiovascular disease (CVD) using patient physiological data. It was developed as a final project to reproduce and extend the findings of the 2022 IEEE paper _"Machine Learning Based Heart Disease Prediction: A Study for Home Personalized Care."_
 
 The project benchmarks 7 supervised learning algorithms across multiple datasets. This implementation achieved a project-high **95.1% accuracy** using a Random Forest classifier on a larger Kaggle dataset, which is then deployed via a Flask REST API.
 
@@ -19,6 +19,7 @@ The project benchmarks 7 supervised learning algorithms across multiple datasets
 ## ⚙️ Web App Installation & Usage
 
 ### 1. Clone the Repository
+
 ```
 git clone https://github.com/Beytullahp42/HeartDiseasePrediction-ML.git
 cd HeartDiseasePrediction-ML
@@ -47,15 +48,75 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### 4. Run the Application
+### 4. Configure Environment
+
+Create a local environment file from the example:
+
+```
+cp .env.example .env
+```
+
+Update `.env` if you need different ports or allowed CORS origins.
+
+### 5. Run the Application
 
 ```
 python app.py
 ```
 
-*Note: If `heart_disease_model.pkl` is not found, the app will automatically run `train_model.py` to train and verify the model before starting the server.* 
+_Note: If `heart_disease_model.pkl` is not found, the app will automatically run `train_model.py` to train and verify the model before starting the server._
 
-Access the web interface at: `http://127.0.0.1:5000/`
+Access the web interface at: `http://127.0.0.1:8437/`
+
+---
+
+## 🐳 Docker Usage
+
+Create or update `.env` before running Docker:
+
+```
+cp .env.example .env
+```
+
+Build the Docker image from the project folder:
+
+```
+docker build -t heart-disease-prediction .
+```
+
+Run the container:
+
+```
+docker run --rm --env-file .env -p 8437:8437 heart-disease-prediction
+```
+
+Open the web interface at: `http://127.0.0.1:8437/`
+
+### Docker Compose
+
+Build and run the app with Compose:
+
+```
+docker compose up --build
+```
+
+If port `8437` is already in use, choose another host port:
+
+```
+HOST_PORT=5050 docker compose up --build
+```
+
+Then open: `http://127.0.0.1:5050/`
+
+### Deployment Notes
+
+For `heartdp.beytullahp.com`, serve the frontend and `/predict` API from the same Flask app behind your HTTPS reverse proxy. Because the browser submits to `/predict`, same-origin deployment does not require CORS.
+
+Configure allowed cross-origin callers in `.env` only if another origin will call `/predict`:
+
+```
+CORS_ORIGINS=https://heartdp.beytullahp.com
+```
 
 ---
 
@@ -65,14 +126,14 @@ For a deep dive into the experimental loop, data visualization, and benchmarking
 
 This notebook contains:
 
-* The complete comparison of 6 dataset variations vs 7 models 
+- The complete comparison of 6 dataset variations vs 7 models
 
-* Confusion Matrices and Learning Curves 
+- Confusion Matrices and Learning Curves
 
-* The logic behind the "Imputation vs. Deletion" data engineering strategy 
+- The logic behind the "Imputation vs. Deletion" data engineering strategy
 
 ---
 
 ## ⚠️ Disclaimer
 
-This application is for educational and research purposes only. It is **not** a substitute for professional medical advice, diagnosis, or treatment. 
+This application is for educational and research purposes only. It is **not** a substitute for professional medical advice, diagnosis, or treatment.

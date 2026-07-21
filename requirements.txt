@@ -8,3 +8,4 @@ ucimlrepo
 flask-cors
 flask
 joblib
+python-dotenv

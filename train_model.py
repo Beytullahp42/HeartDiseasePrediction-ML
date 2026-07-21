@@ -1,11 +1,13 @@
 import pandas as pd
 import joblib
+from pathlib import Path
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
-FILE_PATH = 'data/heart_statlog_cleveland_hungary_final.csv'
-MODEL_NAME = 'heart_disease_model.pkl'
+BASE_DIR = Path(__file__).resolve().parent
+FILE_PATH = BASE_DIR / 'data' / 'heart_statlog_cleveland_hungary_final.csv'
+MODEL_NAME = BASE_DIR / 'heart_disease_model.pkl'
 
 
 def train_and_verify_model():

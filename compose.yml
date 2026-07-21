@@ -1,0 +1,10 @@
+services:
+  app:
+    build:
+      context: .
+    image: heart-disease-prediction:latest
+    env_file:
+      - .env
+    ports:
+      - "${HOST_PORT:-8437}:${PORT:-8437}"
+    restart: unless-stopped

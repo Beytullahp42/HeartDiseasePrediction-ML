@@ -5,6 +5,18 @@ import numpy as np
 import os
 import sys
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_FILE = os.path.join(BASE_DIR, 'heart_disease_model.pkl')
+INDEX_FILE = os.path.join(BASE_DIR, 'index.html')
+
+try:
+    from dotenv import load_dotenv
+except ImportError:
+    load_dotenv = None
+
+if load_dotenv is not None:
+    load_dotenv(os.path.join(BASE_DIR, '.env'))
+
 try:
     import train_model
 except ImportError:
@@ -12,9 +24,15 @@ except ImportError:
     train_model = None
 
 app = Flask(__name__)
-CORS(app)
 
-MODEL_FILE = 'heart_disease_model.pkl'
+cors_origins = [
+    origin.strip()
+    for origin in os.environ.get('CORS_ORIGINS', '').split(',')
+    if origin.strip()
+]
+
+if cors_origins:
+    CORS(app, resources={r"/predict": {"origins": cors_origins}})
 
 
 def load_or_train_model():
@@ -52,7 +70,7 @@ model = load_or_train_model()
 
 @app.route('/')
 def home():
-    return send_file('index.html')
+    return send_file(INDEX_FILE)
 
 
 @app.route('/predict', methods=['POST'])
@@ -87,4 +105,5 @@ if __name__ == '__main__':
     if model is None:
         model = load_or_train_model()
 
-    app.run(debug=True, port=5000)
+    port = int(os.environ.get('PORT', 8437))
+    app.run(debug=True, host='0.0.0.0', port=port)
