@@ -108,16 +108,6 @@ HOST_PORT=5050 docker compose up --build
 
 Then open: `http://127.0.0.1:5050/`
 
-### Deployment Notes
-
-For `heartdp.beytullahp.com`, serve the frontend and `/predict` API from the same Flask app behind your HTTPS reverse proxy. Because the browser submits to `/predict`, same-origin deployment does not require CORS.
-
-Configure allowed cross-origin callers in `.env` only if another origin will call `/predict`:
-
-```
-CORS_ORIGINS=https://heartdp.beytullahp.com
-```
-
 ---
 
 ## 📓 Research Notebook
